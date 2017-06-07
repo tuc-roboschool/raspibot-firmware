@@ -31,10 +31,15 @@ clean:
 # 
 # regular builds with 'make' will not be tracked, to build a firmware file
 # that is tracked by the VCS, run 'make dist'
+# to flash this firmware, run 'make program_dist'
 ##
 
-.PHONY: dist
+.PHONY: dist program_dist
 dist: dist/$(TARGET).hex
+	
+program_dist: dist/$(TARGET).hex
+	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c stk500v2 -P $(PORT) -U flash:w:$< -B 40
+	
 
 dist/%.hex: %.elf
 	avr-objcopy -O ihex -R .eeprom $< $@ 
