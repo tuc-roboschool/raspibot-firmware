@@ -25,6 +25,19 @@ all:$(TARGET).hex memory-used
 	
 clean:
 	rm -f *.o *.hex *.obj *.hex *.elf *.i *.s *.eep
+	
+##
+# Add an explicit target for firmware binaries that will be versioned
+# 
+# regular builds with 'make' will not be tracked, to build a firmware file
+# that is tracked by the VCS, run 'make dist'
+##
+
+.PHONY: dist
+dist: dist/$(TARGET).hex
+
+dist/%.hex: %.elf
+	avr-objcopy -O ihex -R .eeprom $< $@ 
 
 %.eep: %.elf
 	 avr-objcopy -j .eeprom --set-section-flags=.eeprom="alloc,load" --change-section-lma .eeprom=0 -O ihex $< $@
