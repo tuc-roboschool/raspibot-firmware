@@ -59,8 +59,8 @@ void setMotorSpeed_l(int8_t speedLeft){
 
 void setPIvalues(int16_t P, int16_t I, uint8_t encoderMulti)
 {
-	eeprom_update_word(&PID_P,P);
-	eeprom_update_word(&PID_I,I);
+	eeprom_update_word((uint16_t*)&PID_P,P);
+	eeprom_update_word((uint16_t*)&PID_I,I);
 	eeprom_update_byte(&EncoderMulti,encoderMulti);
 }
 
