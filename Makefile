@@ -11,9 +11,9 @@ AVRDUDE_DEVICE = attiny2313
 OBJ=$(TARGET).o
 
 OPT=-Os
-CFLAGS=-g -Wall -mcall-prologues -mmcu=$(MCU) $(DEVICE_SPECIFIC_CFLAGS) $(OPT) -std=c99
+CFLAGS=-g -Wall -mcall-prologues -mmcu=$(MCU) $(DEVICE_SPECIFIC_CFLAGS) $(OPT) -std=c99 -flto
 CC=avr-gcc
-LDFLAGS=-Wl,-gc-sections -Wl,-relax
+LDFLAGS=-Wl,-gc-sections -Wl,-relax -flto
 
 #-lpololu_$(DEVICE) 
 
