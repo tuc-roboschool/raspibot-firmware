@@ -1,4 +1,4 @@
-PORT ?= /dev/ttyACM0
+PORT ?= /dev/spidev0.0
 TARGET=main
 
 LIB=lib
@@ -7,6 +7,7 @@ LIB=lib
 DEVICE = attiny2313a
 MCU = attiny2313a
 AVRDUDE_DEVICE = attiny2313
+AVRDUDE_INTERFACE = linuxspi
 
 OBJ=$(TARGET).o
 
@@ -38,7 +39,7 @@ clean:
 dist: dist/$(TARGET).hex
 	
 program_dist: dist/$(TARGET).hex
-	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c stk500v2 -P $(PORT) -U flash:w:$< -B 40
+	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c $(AVRDUDE_INTERFACE) -P $(PORT) -U flash:w:$< -B 40
 	
 
 dist/%.hex: %.elf
@@ -60,7 +61,7 @@ dist/%.hex: %.elf
 	#$(CC) $(CFLAGS) $< -o $@
 
 program: $(TARGET).hex
-	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c stk500v2 -P $(PORT) -U flash:w:$(TARGET).hex -B 40
+	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c $(AVRDUDE_INTERFACE) -P $(PORT) -U flash:w:$(TARGET).hex -B 40
 	
 memory-used:$(TARGET).elf
 	avr-size --mcu=$(MCU) -C $(TARGET).elf
