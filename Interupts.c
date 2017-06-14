@@ -53,6 +53,7 @@ ISR( PCINT1_vect)
 #endif
 {
 #ifndef Attiny1
+#ifndef no_target
   if (target_l||target_r) {
     if (((target_r>0)&&(rightEncoderCount >= target_r))
         || ((target_r<0)&&(rightEncoderCount <= target_r))
@@ -72,12 +73,13 @@ ISR( PCINT1_vect)
       target_l = 0;
     }
   }
+#endif
   {
     #ifdef Motor_control
     static int16_t encoderl_old,encoderr_old;
     if ((motor_speed_l!=0)&&(motor_speed_r!=0)){
           //do some PID - Magic??
-          static uint8_t counter=0;//do the Magic not at every Overflow
+          static uint16_t counter=0;//do the Magic not at every Overflow
           if(counter>=counter_drive){
               counter=0;
               int16_t drive_l=leftEncoderCount-encoderl_old;
@@ -85,7 +87,7 @@ ISR( PCINT1_vect)
               
               /*static*/ int16_t error;
               //int16_t error_old=error;
-              error=(drive_l*eeprom_read_byte(&EncoderMulti)/1000)/motor_speed_l - (drive_r*eeprom_read_byte(&EncoderMulti)/1000)/motor_speed_r;
+              error=(drive_l*eeprom_read_byte(&EncoderMulti))/motor_speed_l - (drive_r*eeprom_read_byte(&EncoderMulti))/motor_speed_r;
               
               static int16_t P,I=0/*,D=0*/;
               P=error*(int16_t)eeprom_read_word((uint16_t*)&PID_P)/1000;
@@ -97,8 +99,8 @@ ISR( PCINT1_vect)
               speedright=(speedright>max_speed_value)?max_speed_value:(speedright<-max_speed_value)?-max_speed_value:speedright;
               speedleft=(speedleft>max_speed_value)?max_speed_value:(speedleft<-max_speed_value)?-max_speed_value:speedleft;
               
-              setMotorSpeed_r(speedright);
-              setMotorSpeed_l(speedleft);
+              setMotorSpeed_r((int8_t)speedright);
+              setMotorSpeed_l((int8_t)speedleft);
               
               encoderr_old=rightEncoderCount;	
               encoderl_old=leftEncoderCount;
@@ -125,11 +127,10 @@ ISR( PCINT1_vect)
 #endif
 {
  if (Buzzer_timeout)
-	if ((--Buzzer_timeout)==0) {
-		PWM_Pin_or_Buzzer_freq?(OCR_PWM_PIN=0):(OCR_BUZZER=0);
- 	}
-#ifdef Music_control
+	Buzzer_timeout--;
  else {
+	PWM_Pin_or_Buzzer_freq?(OCR_PWM_PIN=0):(OCR_BUZZER=0);
+#ifdef Music_control
 	 if (music_que_store!=music_que_load){
 	 //new frequency
 	 	uint16_t freq=music_que[++music_que_load];
@@ -138,6 +139,6 @@ ISR( PCINT1_vect)
 	  	music_que_load%=music_que_len;
 		play_frequency(freq,level&0xFF,dur,(level>>8) & COM_SET_PWM_MASK);
 	 } 
- }
 #endif
+ }
 }

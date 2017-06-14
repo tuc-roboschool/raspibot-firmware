@@ -80,6 +80,7 @@ void Send_Int(int16_t send){
  	Send_Byte((send&0x00FF)   );
 #endif
 }
+#ifndef opt_only_one_Attiny
 /*Send Attiny 2: für belibige Mengen Attinys erweiterbar*/
 void Send_Byte_Attiny2(uint8_t send){
 
@@ -120,6 +121,7 @@ void Send_Int_Attiny2(int16_t send){
  	Send_Byte_Attiny2((send&0xFF00)>>8);
  	Send_Byte_Attiny2((send&0x00FF)   );
 }
+#endif
  
 unsigned char USART_Receive( void )
 {
@@ -131,6 +133,7 @@ unsigned char USART_Receive( void )
  	
 }
 
+#ifndef no_extra_pins
 void setoutput(int8_t free_pin_nr,int8_t level)
 {
 	#ifndef Attiny2
@@ -179,6 +182,8 @@ int8_t checkpin(int8_t free_pin_nr)
 	return (pinlevel?HIGHT:LO);
 	#endif
 }
+#endif
+
 void setbuzzer(uint16_t ICR,uint8_t prescaler,uint16_t OCR,uint8_t pwm_pin)
 {
 	if (prescaler>0x07)prescaler=BUZZER_DEFAULT_PRESCALER;

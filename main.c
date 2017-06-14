@@ -41,6 +41,7 @@ void main_action(void)
       command = USART_Receive(); // save the data before its gone
       if (command & 0x80){
       #ifndef Attiny2
+#ifndef no_extra_pins
 	      if ((command & 0xF0)==SET_PIN){
 	      	//set PIN
 		setoutput(command & COM_PIN_MSK,(command & COM_PIN_HIGHT)?HIGHT:LO);
@@ -51,6 +52,7 @@ void main_action(void)
 		Send_Byte(checkpin(((command & COM_PIN_MSK)>>COM_PIN_OFFSET)+1));
 	      }
 	      else Send_Byte(NAK);
+#endif
       #endif
       }
       else
@@ -60,7 +62,9 @@ void main_action(void)
           {
             // the raspi just wants to know if you're there, so confirm you're
             Send_Byte(ACK);
+#ifndef opt_only_one_Attiny
 	    Send_Byte_Attiny2(ACK2);
+#endif
             // a different state then S0 is not necessary due S0 waits for next
             // command
             break;
@@ -89,7 +93,9 @@ void main_action(void)
             // and confirm that we have done so
             if (command==RST_L){
 		Send_Byte(ACK);
+#ifndef opt_only_one_Attiny
 	    	Send_Byte_Attiny2(ACK2);
+#endif
             	// and stay with waiting for a command
             	break;
 	    }
@@ -98,7 +104,9 @@ void main_action(void)
           {
             rightEncoderCount=0;
             Send_Byte(ACK);
+#ifndef opt_only_one_Attiny
 	    Send_Byte_Attiny2(ACK2);
+#endif
             break;
           }
 
@@ -108,9 +116,11 @@ void main_action(void)
 
         case SET_PI:
 
+#ifndef no_target
         case SET_TL:
         case SET_TR:
         case SET_TB:
+#endif
 
        	case COM_BUZZER_FREQ:
        	case COM_SET_BUZZER:
@@ -132,22 +142,6 @@ void main_action(void)
                 // and confirm that
                 Send_Byte(ACK);
             #endif
-            break;
-          }
-        case REACH:
-          {
-	    #ifndef Attiny2
-            	// check if one of the encoder values is within tolerance
-            	int16_t difference = rightEncoderCount - target_r;
-            	int16_t absDifference = difference < 0 ? -difference : difference;
-            	if(absDifference < reachToleranceInc)
-              		Send_Byte(ACK);
-            	difference = leftEncoderCount - target_l;
-            	absDifference = difference < 0 ? -difference : difference;
-            	if(absDifference < reachToleranceInc)
-              		Send_Byte(ACK);
-            	Send_Byte(NAK);
-	    #endif
             break;
           }
         case ECHO:
@@ -173,7 +167,9 @@ void main_action(void)
             disablePWMpin();
             // and confirm that we have done so
             Send_Byte(ACK);
+#ifndef opt_only_one_Attiny
 	    Send_Byte_Attiny2(ACK2);
+#endif
             // and stay with waiting for a command
             break;
           }
@@ -181,7 +177,9 @@ void main_action(void)
           {
             // put a NAK there, maybe the raspi is reading it
             Send_Byte(NAK);
+#ifndef opt_only_one_Attiny
 	    Send_Byte_Attiny2(NAK2);
+#endif
             break;
           }
         }
@@ -211,15 +209,19 @@ void main_action(void)
       // if we made it this far there's no reason something should fail, so we
       // can confirm now already. Don't let the raspi wait ..
       Send_Byte(ACK);
+#ifndef opt_only_one_Attiny
       Send_Byte_Attiny2(ACK2);
+#endif
       // combine both bytes
       data1 |= secondChunk;
       #ifndef Attiny2
       	// see what we have to do next with it
+#ifndef no_target
       	if((command == SET_TB)||(command == SET_TL))
   		target_l = data1;
       	if((command == SET_TB)||(command == SET_TR))
   		target_r = data1;
+#endif
       	//if((command == SET_TB)||(command == SET_TL)||(command == SET_TR))//nothing
       	if((command == SET_MB)||(command == SET_ML)||(command == SET_MR)){
         	// disassemble data again
@@ -268,7 +270,9 @@ void main_action(void)
       state=WAIT;
       // in case we run into trouble just send a NAK
       Send_Byte(NAK);
+#ifndef opt_only_one_Attiny
       Send_Byte_Attiny2(NAK2);
+#endif
       break;
     }
   }

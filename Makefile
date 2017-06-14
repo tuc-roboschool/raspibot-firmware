@@ -10,10 +10,10 @@ AVRDUDE_DEVICE = attiny2313
 
 OBJ=$(TARGET).o
 
-OPT=-Os
+OPT=-Os -flto
 CFLAGS=-g -Wall -mcall-prologues -mmcu=$(MCU) $(DEVICE_SPECIFIC_CFLAGS) $(OPT) -std=c99
 CC=avr-gcc
-LDFLAGS=-Wl,-gc-sections -Wl,-relax
+LDFLAGS=-Wl,-gc-sections -Wl,-relax -flto
 
 #-lpololu_$(DEVICE) 
 
@@ -35,11 +35,13 @@ clean:
 ##
 
 .PHONY: dist program_dist
-dist: dist/$(TARGET).hex
+dist: dist/$(TARGET).hex dist/$(TARGET).eep
 	
-program_dist: dist/$(TARGET).hex
-	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c stk500v2 -P $(PORT) -U flash:w:$< -B 40
+program_dist: dist/$(TARGET).hex dist/$(TARGET).eep
+	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c stk500v2 -P $(PORT) -U flash:w:dist/$(TARGET).hex -U eeprom:w:dist/$(TARGET).eep -B 40
 	
+dist/%.eep: %.elf
+	 avr-objcopy -j .eeprom --set-section-flags=.eeprom="alloc,load" --change-section-lma .eeprom=0 -O ihex $< $@
 
 dist/%.hex: %.elf
 	avr-objcopy -O ihex -R .eeprom $< $@ 
@@ -59,8 +61,8 @@ dist/%.hex: %.elf
 #%.o: %.c
 	#$(CC) $(CFLAGS) $< -o $@
 
-program: $(TARGET).hex
-	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c stk500v2 -P $(PORT) -U flash:w:$(TARGET).hex -B 40
+program: $(TARGET).hex $(TARGET).eep
+	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c stk500v2 -P $(PORT) -U flash:w:$(TARGET).hex -U eeprom:w:$(TARGET).eep -B 40
 	
 memory-used:$(TARGET).elf
 	avr-size --mcu=$(MCU) -C $(TARGET).elf

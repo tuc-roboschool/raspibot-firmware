@@ -17,27 +17,6 @@ void Send_Int(int16_t send);
 //receive something over USART
 unsigned char USART_Receive( void );
 
-/**
- * Allows to set the target count for the encoders through a function call
- * instead of accessing the global directly.
- * If zero the value will be ignored by the other functions which is equal to
- * clear the value.
- *
- * @param newTarget the encoder increments the robot shall stop if reached with
- *                  the first wheel
- */
-void setTargetCount_l(int16_t newTarget);
-void setTargetCount_r(int16_t newTarget);
-
-/**
- * Allows to get the target encoder count through a function call instead of
- * accessing the global directly
- *
- * @return the set count of increments the robot shall stop at as an 16-bit int
- */
-int16_t getTargetCount_l();
-int16_t getTargetCount_r();
-
 void setPIvalues(int16_t P, int16_t I, uint8_t encoderMulti);
 
 /**
@@ -54,8 +33,10 @@ void setPIvalues(int16_t P, int16_t I, uint8_t encoderMulti);
  */
 void setMotorSpeed_l(int8_t speedLeft);
 void setMotorSpeed_r(int8_t speedRight);
+#ifndef no_extra_pins
 void setoutput(int8_t free_pin_nr,int8_t level);
 int8_t checkpin(int8_t free_pin_nr);
+#endif
 void setbuzzer(uint16_t ICR,uint8_t prescaler,uint16_t OCR,uint8_t pwm_pin);
 void play_frequency(uint16_t freq,uint8_t level, uint16_t dur,uint8_t pwm_pin);
 void disablebuzzer(void);

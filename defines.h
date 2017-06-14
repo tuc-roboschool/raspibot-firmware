@@ -13,6 +13,10 @@
 #define Motor_control
 //#define Music_control
 
+#define opt_only_one_Attiny
+#define no_target
+#define no_extra_pins
+
 /*
  * Communication messages:
  */
@@ -24,7 +28,6 @@
 #define RST_R  0x05 // reset the right encoder count
 #define RST_L  0x06 // reset the left encoder count
 #define RST_B  0x07 // reset both encoder counts
-#define REACH  0x0B // returns if the robots encoder count equals the target
 #define ECHO   0x0C // return the next sended Byte
 #define SET_TL 0x2A // set the target count to stop at for left Motor
 #define SET_TR 0x26 // set the target count to stop at for right Motor
@@ -200,17 +203,19 @@
 //buzzer default prescaler=1-> lowest frequenz=15Hz(F_CPU=1MHz)
 //buzzer default prescaler=1-> lowest frequenz=122Hz(F_CPU=8MHz)
 #define BUZZER_DEFAULT_PRESCALER    1
-#define max_speed_value   100
-//counter_drive=5-> PID call every 1 ms
+#define max_speed_value   127
+//counter_drive: ~1/2MHz=timeroverflow =>500-> PI call every 1 m00s
 #define counter_drive 500
 uint8_t EEMEM EncoderMulti=10;
 int16_t EEMEM PID_P=0;
 int16_t EEMEM PID_I=0;
 
+#ifdef Music_control
 #define music_que_len             3*10
 uint16_t music_que[music_que_len];
 uint8_t music_que_store=0;
 uint8_t music_que_load=0;
+#endif
 
 /******************************************************************************
  * Globals
@@ -219,13 +224,15 @@ uint8_t music_que_load=0;
 volatile int16_t rightEncoderCount=0;
 volatile int16_t leftEncoderCount=0;
 // how far the robot shall move; if zero the value has to be ignored
+#ifndef no_target
 int16_t target_r;
 int16_t target_l;
+#endif
 int16_t motor_speed_r;
 int16_t motor_speed_l;
 //Buzzer Timer
 uint16_t Buzzer_timeout;
-uint8_t  PWM_Pin_or_Buzzer_freq;
+volatile uint8_t  PWM_Pin_or_Buzzer_freq;
 // how many ms the program shall wait for the capacitor to unload
 #define waitCycleCapacitorMs  2
 // the tolerance in increments for what is considered standing on target
