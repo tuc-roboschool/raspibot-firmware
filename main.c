@@ -8,7 +8,7 @@
  *
  * Only use with avr-gcc 6.3.0 or highter
  */
-#define F_CPU 8000000UL 
+#define F_CPU 1000000UL 
 //system clk is at 8MHz
  //TODO:PID
 
@@ -376,7 +376,7 @@ void init()
   // use PWM-mode 1 (datasheet page 75 table 40)
   // WGM2 stays zero due the counter shall go through all the way to 255
   //  TCCR1A |= 0b00000000; // choose a phase correct PWM
-  TCCR1B = 0x12;
+  TCCR1B = 0x11;
   // prescaler 8:0x02
   // (datasheet page 77)
   // set the registers to be compared against to zero to disable the motors

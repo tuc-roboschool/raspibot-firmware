@@ -126,11 +126,12 @@ ISR( PCINT1_vect)
  ISR( TIMER1_OVF_vect)
 #endif
 {
- if (Buzzer_timeout)
-	Buzzer_timeout--;
- else {
-	PWM_Pin_or_Buzzer_freq?(OCR_PWM_PIN=0):(OCR_BUZZER=0);
+ if (Buzzer_timeout){
+	if(--Buzzer_timeout)
+      PWM_Pin_or_Buzzer_freq?(OCR_PWM_PIN=0):(OCR_BUZZER=0);
+  }
 #ifdef Music_control
+ else {
 	 if (music_que_store!=music_que_load){
 	 //new frequency
 	 	uint16_t freq=music_que[++music_que_load];
@@ -139,6 +140,6 @@ ISR( PCINT1_vect)
 	  	music_que_load%=music_que_len;
 		play_frequency(freq,level&0xFF,dur,(level>>8) & COM_SET_PWM_MASK);
 	 } 
-#endif
  }
+#endif
 }
