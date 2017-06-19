@@ -40,9 +40,9 @@ ISR( PCINT1_vect)
 
   // check if what the second sensor signals; Pin 4 is the 2nd Pin on Port B
   if ((PIN_ENC_L1 & PIN_NR_ENC_L1)==((PIN_ENC_L2 & PIN_NR_ENC_L2)>>ENC_DIFF_L1_L2))
-    leftEncoderCount++;
+  ;//  leftEncoderCount++;
   else
-    leftEncoderCount--;
+  ;//  leftEncoderCount--;
 }
 
 //PWM-Motor Interupt
@@ -94,9 +94,9 @@ ISR( PCINT1_vect)
               P=error*(int16_t)eeprom_read_word((uint16_t*)&PID_P)/1000;
               I+=error*(int16_t)eeprom_read_word((uint16_t*)&PID_I)/1000;
               P=(P>2*max_speed_value)?2*max_speed_value:((P<-2*max_speed_value)?-2*max_speed_value:P);
-              I=(I>3*max_speed_value)?3*max_speed_value:((I<-3*max_speed_value)?-3*max_speed_value:I);
+              I=(I>30*max_speed_value)?30*max_speed_value:((I<-30*max_speed_value)?-30*max_speed_value:I);
               //D=(error-error_old)*PID_D/1000;
-    
+    leftEncoderCount=I;
               int16_t speedright=motor_speed_r+P+I/*+D*/;
               int16_t speedleft=motor_speed_l-P-I/*-D*/;
               speedright=(speedright>max_speed_value)?max_speed_value:  ((speedright<-max_speed_value)?-max_speed_value:speedright);
