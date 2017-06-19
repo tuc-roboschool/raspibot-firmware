@@ -90,11 +90,11 @@ ISR( PCINT1_vect)
               error=(drive_l*eeprom_read_byte(&EncoderMulti))/motor_speed_l - (drive_r*eeprom_read_byte(&EncoderMulti))/motor_speed_r;
               
               int16_t P/*,D=0*/;
-              static int16_t I=0;
+              int16_t I=PIDI;
               P=error*(int16_t)eeprom_read_word((uint16_t*)&PID_P)/1000;
               I+=error*(int16_t)eeprom_read_word((uint16_t*)&PID_I)/1000;
-              P=(P>2*max_speed_value)?2*max_speed_value:((P<-2*max_speed_value)?-2*max_speed_value:P);
-              I=(I>30*max_speed_value)?30*max_speed_value:((I<-30*max_speed_value)?-30*max_speed_value:I);
+              P=(P>2*max_speed_value)?2*max_speed_value:((P<-(2*max_speed_value))?-2*max_speed_value:P);
+              I=(I>5*max_speed_value)?5*max_speed_value:((I<-(5*max_speed_value))?-5*max_speed_value:I);
               //D=(error-error_old)*PID_D/1000;
               PIDI=I;
               int16_t speedright=motor_speed_r+P+I/*+D*/;
