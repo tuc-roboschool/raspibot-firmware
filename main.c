@@ -74,7 +74,7 @@ void main_action(void)
           {
 	    #ifndef Attiny2
             	// same procedure as for the right side
-            	Send_Int(PIDI);
+            	Send_Int(leftEncoderCount);
             	if (command==ENC_L) break;
 	    #endif
           }

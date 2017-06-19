@@ -36,7 +36,7 @@
 #define SET_MR 0x25 // set new thrust level for right Motor
 #define SET_MB 0x2D // set new thrust level for both motors
 #define STO_M  0x21 // stop motors
-#define SET_PI 0x2F // set PI-value(2xint16_t(1/1000 P/I Value),uint8_t Encodermultiplikator)
+#define SET_PI 0x2F // set PI-value(2xint16_t(1/100 P/I Value),uint8_t Encodermultiplikator)
 #define ACK    0x10 // confirm received command
 #define ACK2   0x10 // confirm received command for Attiny 2
 #define NAK    0x14 // tell the raspi something went south
@@ -223,7 +223,6 @@ uint8_t music_que_load=0;
 
 volatile int16_t rightEncoderCount=0;
 volatile int16_t leftEncoderCount=0;
-volatile int16_t PIDI=0;
 // how far the robot shall move; if zero the value has to be ignored
 #ifndef no_target
 int16_t target_r;

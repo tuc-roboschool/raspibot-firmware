@@ -91,14 +91,14 @@ ISR( PCINT1_vect)
               
               int16_t P/*,D=0*/;
               static int16_t I=0;
-              P=error*(int16_t)eeprom_read_word((uint16_t*)&PID_P)/100;
+              P=error*(int16_t)eeprom_read_word((uint16_t*)&PID_P);
               I+=error*(int16_t)eeprom_read_word((uint16_t*)&PID_I);
-              P=(P>1*max_speed_value)?1*max_speed_value:((P<-(1*max_speed_value))?-1*max_speed_value:P);
+//              P=(P>100*max_speed_value)?100*max_speed_value:((P<-(100*max_speed_value))?-100*max_speed_value:P);
               I=(I>(int16_t)200*max_speed_value)?(int16_t)200*max_speed_value:((I<-((int16_t)200*max_speed_value))?-(int16_t)200*max_speed_value:I);
               //D=(error-error_old)*PID_D/100;
-              PIDI=I/100;
-              int16_t speedright=motor_speed_r+P+I/100/*+D*/;
-              int16_t speedleft=motor_speed_l-P-I/100/*-D*/;
+              
+              int16_t speedright=motor_speed_r*(100+P+I)/100/*+D*/;
+              int16_t speedleft=motor_speed_l*(100-P-I)/100/*-D*/;
               speedright=(speedright>max_speed_value)?max_speed_value:  ((speedright<-max_speed_value)?-max_speed_value:speedright);
               speedleft =(speedleft >max_speed_value)?max_speed_value:  ((speedleft <-max_speed_value)?-max_speed_value:speedleft);
               
