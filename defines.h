@@ -223,6 +223,7 @@ uint8_t music_que_load=0;
 
 volatile int16_t rightEncoderCount=0;
 volatile int16_t leftEncoderCount=0;
+volatile int16_t PIDI=0;
 // how far the robot shall move; if zero the value has to be ignored
 #ifndef no_target
 int16_t target_r;
