@@ -7,6 +7,9 @@ LIB=lib
 DEVICE = attiny2313a
 MCU = attiny2313a
 AVRDUDE_DEVICE = attiny2313
+PROGRAMMER = linuxspi
+#PROGRAMMER = linuxspi2
+PORT = /dev/spidev0.0
 
 OBJ=$(TARGET).o
 
@@ -37,8 +40,8 @@ clean:
 .PHONY: dist program_dist
 dist: dist/$(TARGET).hex dist/$(TARGET).eep
 	
-program_dist: dist/$(TARGET).hex dist/$(TARGET).eep
-	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c stk500v2 -P $(PORT) -U flash:w:dist/$(TARGET).hex -U eeprom:w:dist/$(TARGET).eep -B 40
+program_dist:# dist/$(TARGET).hex dist/$(TARGET).eep
+	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c $(PROGRAMMER) -P $(PORT) -U flash:w:dist/$(TARGET).hex -U eeprom:w:dist/$(TARGET).eep -B 40
 	
 dist/%.eep: %.elf
 	 avr-objcopy -j .eeprom --set-section-flags=.eeprom="alloc,load" --change-section-lma .eeprom=0 -O ihex $< $@
@@ -62,7 +65,7 @@ dist/%.hex: %.elf
 	#$(CC) $(CFLAGS) $< -o $@
 
 program: $(TARGET).hex $(TARGET).eep
-	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c stk500v2 -P $(PORT) -U flash:w:$(TARGET).hex -U eeprom:w:$(TARGET).eep -B 40
+	$(AVRDUDE) -p $(AVRDUDE_DEVICE) -c $(PROGRAMMER) -P $(PORT) -U flash:w:$(TARGET).hex -U eeprom:w:$(TARGET).eep -B 40
 	
 memory-used:$(TARGET).elf
 	avr-size --mcu=$(MCU) -C $(TARGET).elf
