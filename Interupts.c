@@ -96,7 +96,7 @@ ISR( PCINT1_vect)
               P=(P>2*max_speed_value)?2*max_speed_value:((P<-2*max_speed_value)?-2*max_speed_value:P);
               I=(I>30*max_speed_value)?30*max_speed_value:((I<-30*max_speed_value)?-30*max_speed_value:I);
               //D=(error-error_old)*PID_D/1000;
-    leftEncoderCount=PIDI;
+              PIDI=I;
               int16_t speedright=motor_speed_r+P+I/*+D*/;
               int16_t speedleft=motor_speed_l-P-I/*-D*/;
               speedright=(speedright>max_speed_value)?max_speed_value:  ((speedright<-max_speed_value)?-max_speed_value:speedright);
