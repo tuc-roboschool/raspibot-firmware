@@ -204,8 +204,8 @@
 //buzzer default prescaler=1-> lowest frequenz=122Hz(F_CPU=8MHz)
 #define BUZZER_DEFAULT_PRESCALER    1
 #define max_speed_value   127
-//counter_drive: ~1/2MHz=timeroverflow =>500-> PI call every 1 m00s
-#define counter_drive 500
+//counter_drive: ~250Hz=timeroverflow =>1-> PI call every 4 ms
+#define counter_drive 1
 uint8_t EEMEM EncoderMulti=10;
 int16_t EEMEM PID_P=0;
 int16_t EEMEM PID_I=0;

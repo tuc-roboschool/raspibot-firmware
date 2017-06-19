@@ -337,7 +337,7 @@ void init()
   // prescaler 8:0x02
   // (datasheet page 77)
   // set the registers to be compared against to zero to disable the motors
-  ICR1  = max_speed_value;//Max counter -> Max speed value
+  ICR1  = 255;//Max counter -> Max speed value
 #else
   // PWM-configuration
   // Set to use a pseudo fast PWM (datasheet page 74)
