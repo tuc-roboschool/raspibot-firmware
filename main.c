@@ -347,14 +347,14 @@ void init()
   // TCCR0A |= 0x01;
   //  TCCR0B |= 0b00000000; // choose a phase correct PWM top at 255
   // prescaler 8
-  TCCR1B = 1<<CS01;
+  TCCR0B = 1<<CS01;
   // (datasheet page 77)
   // set the registers to be compared against to zero to disable the motors
   //Max speed value:fixed at 255
 #endif
 
-  OCR_R=0;
-  OCR_L=0;
+  setMotorSpeed_l(0);
+  setMotorSpeed_r(0);
 
 #ifndef Version2
   // BUZZER-configuration
