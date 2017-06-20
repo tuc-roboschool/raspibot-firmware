@@ -87,7 +87,7 @@ ISR( PCINT1_vect)
               
               /*static*/ int16_t error;
               //int16_t error_old=error;
-              error=(drive_l*eeprom_read_byte(&EncoderMulti)*max_speed_value)/motor_speed_l - (drive_r*eeprom_read_byte(&EncoderMulti)*max_speed_value)/motor_speed_r;
+              error=(drive_l*eeprom_read_byte(&EncoderMulti))/motor_speed_l - (drive_r*eeprom_read_byte(&EncoderMulti))/motor_speed_r;
               
               int16_t P/*,D=0*/;
               static int16_t I=0;
