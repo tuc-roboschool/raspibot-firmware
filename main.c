@@ -353,8 +353,8 @@ void init()
   //Max speed value:fixed at 255
 #endif
 
-  setMotorSpeed_l(0);
-  setMotorSpeed_r(0);
+  OCR_R=0;
+  OCR_L=0;
 
 #ifndef Version2
   // BUZZER-configuration
