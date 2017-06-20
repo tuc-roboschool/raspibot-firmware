@@ -347,7 +347,7 @@ void init()
   // TCCR0A |= 0x01;
   //  TCCR0B |= 0b00000000; // choose a phase correct PWM top at 255
   // prescaler 8
-  TCCR1B = 0x02;
+  TCCR1B = 1<<CS01;
   // (datasheet page 77)
   // set the registers to be compared against to zero to disable the motors
   //Max speed value:fixed at 255
@@ -380,7 +380,7 @@ void init()
   // prescaler 8:0x02
   // (datasheet page 77)
   // set the registers to be compared against to zero to disable the motors
-  // ICR1  = 0;//Max counter -> determinate frequency
+  // ICR1  = 1000;//Max counter -> determinate frequency
 #endif
   
   TIMSK=0x82;//both Overflow Interupts enable

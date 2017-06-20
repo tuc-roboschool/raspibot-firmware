@@ -7,10 +7,10 @@
  * @author Marcus Schlutter <marcus.homunculus@gmail.com>
  */
 
-//#define Version2
+#define Version2
 //#define Attiny1
 //#define Attiny2
-//#define Motor_control
+#define Motor_control
 //#define Music_control
 
 #define opt_only_one_Attiny
