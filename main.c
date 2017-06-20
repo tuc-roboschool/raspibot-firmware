@@ -380,7 +380,7 @@ void init()
   // prescaler 8:0x02
   // (datasheet page 77)
   // set the registers to be compared against to zero to disable the motors
-  // ICR1  = 1000;//Max counter -> determinate frequency
+   ICR1  = 1000;//Max counter -> determinate frequency
 #endif
   
   TIMSK=0x82;//both Overflow Interupts enable
