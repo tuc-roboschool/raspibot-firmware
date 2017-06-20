@@ -10,7 +10,7 @@
 #define Version2
 //#define Attiny1
 //#define Attiny2
-#define Motor_control
+//#define Motor_control
 //#define Music_control
 
 #define opt_only_one_Attiny
@@ -125,14 +125,14 @@
  #define DDR_PHASE_L	DDRD
  #define PIN_PHASE_L	0x20
 #else
- #define OCR_L		OCR1B
+ #define OCR_L		    OCR1B
  #define DDR_PHASE_L	DDRB
  #define PIN_PHASE_L    0x10
 #endif
 
 #define PORT_DIR_L    	PORTD
 #define DDR_DIR_L     	DDRD
-#define PIN_DIR_L     	0x44
+#define PIN_DIR_L     	0x04
 
 //free Pins
 #ifdef Version2
