@@ -190,13 +190,13 @@ void main_action(void)
       // state for receiving the first byte of a 2 byte integer
       // the MSB always comes first ...
       int16_t firstChunk=0;
-      if(command != SET_ML)
+      if(command != SET_MR)
         firstChunk = (int16_t) USART_Receive();
       data1 = firstChunk << 8;
       // receiving the seconf byte of a 2 byte integer
       // this is the part with the LSB
       int16_t secondChunk=0;
-      if(command != SET_MR)
+      if(command != SET_ML)
         secondChunk = (int16_t) USART_Receive();
       uint16_t data2=0;
       uint8_t data3=0;
@@ -225,18 +225,18 @@ void main_action(void)
       	//if((command == SET_TB)||(command == SET_TL)||(command == SET_TR))//nothing
       	if((command == SET_MB)||(command == SET_ML)||(command == SET_MR)){
         	// disassemble data again
-        	int8_t rightThrust = (int8_t) (firstChunk);
-        	int8_t leftThrust = (int8_t) (secondChunk);
-        	if ((command == SET_MR)||(command == SET_MB)){
-          		motor_speed_r=rightThrust;
-          		#ifndef Motor_control
-          			setMotorSpeed_r(rightThrust);
-          		#endif
-        	}
+        	int8_t leftThrust = (int8_t) (firstChunk);
+        	int8_t rightThrust = (int8_t) (secondChunk);
         	if ((command == SET_ML)||(command == SET_MB)){
           		motor_speed_l=leftThrust;
           		#ifndef Motor_control
           			setMotorSpeed_l(leftThrust);        
+          		#endif
+        	}
+        	if ((command == SET_MR)||(command == SET_MB)){
+          		motor_speed_r=rightThrust;
+          		#ifndef Motor_control
+          			setMotorSpeed_r(rightThrust);
           		#endif
         	}
       	}
